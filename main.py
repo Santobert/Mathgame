@@ -31,8 +31,8 @@ initial = [
 ]
 
 if __name__ == "__main__":
-    g = GameLists(initial)
-    # g = GameNumbers(initial)
+    # g = GameLists(initial)
+    g = GameNumbers(initial)
     moves = 0
     checks = 0
     while len(g.rows) > 1:
