@@ -1,2 +1,5 @@
+LINE_LENGTH = 9
+SUM = 10
+
 START = "\033[4m"
 END = "\033[0m"
