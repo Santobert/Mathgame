@@ -36,13 +36,16 @@ if __name__ == "__main__":
     moves = 0
     checks = 0
     while len(g.rows) > 1:
-        checks += 1
         result = True
         while result:
             result = g.move()
             if result:
                 moves += 1
+                print("|", end='')
         g.clear_crossed_rows()
-        print(f"{g}\n")
+        # print(f"{g}\n")
+        print(f"\n{moves} moves - {checks} checks - {len(g.rows)} rows")
         g.check()
+        checks += 1
+
     print(f"{moves} moves and {checks} checks until finished")
