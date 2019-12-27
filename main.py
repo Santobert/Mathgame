@@ -1,3 +1,4 @@
+from collections import deque
 from random import randint
 from typing import List
 
@@ -33,7 +34,7 @@ def random(length: int = 25) -> List[int]:
 
 
 if __name__ == "__main__":
-    initial = generate()
+    initial = generate(18)
     # initial = random()
 
     # game = GameLists(initial)
@@ -42,6 +43,7 @@ if __name__ == "__main__":
 
     moves = 0
     checks = 0
+    previous_moves = deque(maxlen=2)
     while len(game.rows) > 1:
         current_moves = 0
         moved = True
@@ -52,15 +54,28 @@ if __name__ == "__main__":
                 print("|", end="")
             else:
                 print()
+
+        if (
+            current_moves == 0
+            and len(previous_moves) == previous_moves.maxlen
+            and all(moves == 0 for moves in previous_moves)
+        ):
+            print("No more moves possible. Abort.")
+            break
+
         crossed_rows = game.clear_crossed_rows()
         added_numbers = game.check()
-        checks += 1
         moves += current_moves
+        checks += 1
+
+        if len(previous_moves) == previous_moves.maxlen:
+            previous_moves.pop()
+        previous_moves.appendleft(current_moves)
 
         # print(f"{g}\n")
         print(
             f"Round {checks}; "
-            + f"Numbers {added_numbers*2} (-{current_moves * 2}/+{added_numbers}); "
+            + f"Numbers {added_numbers * 2} (-{current_moves * 2}/+{added_numbers}); "
             + f"Rows {len(game.rows)} (-{crossed_rows})"
         )
 
