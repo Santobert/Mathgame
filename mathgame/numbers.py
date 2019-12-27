@@ -1,11 +1,9 @@
-START = "\033[4m"
-END = "\033[0m"
+from . import AGame, ANumber
 
 
-class Number:
+class Number(ANumber):
     def __init__(self, number: int, crossed: bool = False):
-        self.number = number
-        self.crossed = crossed
+        super().__init__(number, crossed)
 
         self.successor_v = None
         self.successor_h = None
@@ -20,45 +18,11 @@ class Number:
         not_crossed = not (self.crossed or other.crossed)
         return (num_equal or num_sum) and not_crossed
 
-    def __repr__(self):
-        if self.crossed:
-            return START + str(self.number) + END
-        else:
-            return str(self.number)
 
-
-class Game:
-    def __init__(self):
-        _initial = [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-            1,
-            1,
-            2,
-            1,
-            3,
-            1,
-            4,
-            1,
-            5,
-            1,
-            6,
-            1,
-            7,
-            1,
-            8,
-        ]
-        self.rows = []
-        self.rows.append([])
-        for i in _initial:
+class GameNumbers(AGame):
+    def __init__(self, initial: list):
+        super().__init__()
+        for i in initial:
             self.add(Number(i))
 
     def add(self, number: Number):
@@ -132,43 +96,3 @@ class Game:
 
         for n in to_add:
             self.add(Number(n))
-
-    def clear_crossed_rows(self):
-        to_delete = []
-        for i in range(len(self.rows) - 1):
-            all_crossed = True
-            for n in self.rows[i]:
-                if not n.crossed:
-                    all_crossed = False
-                    break
-            if all_crossed:
-                to_delete.append(i)
-
-        for i in range(len(to_delete)):
-            del self.rows[to_delete[i] - i]
-
-    def __repr__(self):
-        s = ""
-        for i in range(0, len(self.rows)):
-            s += f"{i}. "
-            for n in self.rows[i]:
-                if n.crossed:
-                    s = s + START + str(n.number) + END + " "
-                else:
-                    s = s + str(n.number) + " "
-            s += "\n"
-        return s.strip()
-
-
-if __name__ == "__main__":
-    g = Game()
-    moves = 0
-    while len(g.rows) > 1:
-        moves += 1
-        result = True
-        while result:
-            result = g.move()
-        g.clear_crossed_rows()
-        print(f"{g}\n")
-        g.check()
-    print(f"{moves} moves until finished")

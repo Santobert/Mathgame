@@ -1,7 +1,9 @@
-class Number:
+from . import AGame, ANumber
+
+
+class Number(ANumber):
     def __init__(self, number: int, crossed: bool = False):
-        self.number = number
-        self.crossed = crossed
+        super().__init__(number, crossed)
 
     def matches(self, other) -> bool:
         num_equal = self.number == other.number
@@ -10,38 +12,10 @@ class Number:
         return (num_equal or num_sum) and not_crossed
 
 
-class Game:
-    def __init__(self):
-        _initial = [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            1,
-            1,
-            1,
-            2,
-            1,
-            3,
-            1,
-            4,
-            1,
-            5,
-            1,
-            6,
-            1,
-            7,
-            1,
-            8,
-        ]
-        self.rows = []
-        self.rows.append([])
-        for i in _initial:
+class GameLists(AGame):
+    def __init__(self, initial: list):
+        super().__init__()
+        for i in initial:
             self.add(Number(i))
 
     def add(self, number: Number):
@@ -73,20 +47,6 @@ class Game:
         for n in to_add:
             self.add(Number(n))
 
-    def clear_crossed_rows(self):
-        to_delete = []
-        for i in range(len(self.rows) - 1):
-            all_crossed = True
-            for n in self.rows[i]:
-                if not n.crossed:
-                    all_crossed = False
-                    break
-            if all_crossed:
-                to_delete.append(i)
-
-        for i in range(len(to_delete)):
-            del self.rows[to_delete[i] - i]
-
     def is_matching(self, row: int, col: int):
         number = self.rows[row][col]
 
@@ -116,31 +76,3 @@ class Game:
         for i in range(row + 1, len(self.rows)):
             if col < len(self.rows[i]) and not self.rows[i][col].crossed:
                 return (i, col)
-
-    def __repr__(self):
-        start = "\033[4m"
-        end = "\033[0m"
-        s = ""
-        for i in range(0, len(self.rows)):
-            s += f"{i}. "
-            for n in self.rows[i]:
-                if n.crossed:
-                    s = s + start + str(n.number) + end + " "
-                else:
-                    s = s + str(n.number) + " "
-            s += "\n"
-        return s.strip()
-
-
-if __name__ == "__main__":
-    g = Game()
-    moves = 0
-    while len(g.rows) > 1:
-        moves += 1
-        result = True
-        while result:
-            result = g.move()
-        g.clear_crossed_rows()
-        print(f"{g}\n")
-        g.check()
-    print(f"{moves} moves until finished")
