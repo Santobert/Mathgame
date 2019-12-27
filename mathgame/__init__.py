@@ -38,7 +38,7 @@ class AGame:
     def add(self, i: int):
         raise NotImplementedError()
 
-    def check(self):
+    def check(self) -> int:
         to_add = []
         for row in self.rows:
             for num in row:
@@ -48,7 +48,9 @@ class AGame:
         for i in to_add:
             self.add(i)
 
-    def clear_crossed_rows(self):
+        return len(to_add)
+
+    def clear_crossed_rows(self) -> int:
         to_delete = []
         for i in range(len(self.rows) - 1):
             all_crossed = True
@@ -59,8 +61,10 @@ class AGame:
             if all_crossed:
                 to_delete.append(i)
 
-        for i in range(len(to_delete)):
+        for i in range(0, len(to_delete)):
             del self.rows[to_delete[i] - i]
+
+        return len(to_delete)
 
     def move(self) -> bool:
         raise NotImplementedError()
