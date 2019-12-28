@@ -43,8 +43,8 @@ if __name__ == "__main__":
 
     moves = 0
     checks = 0
-    previous_moves = deque(maxlen=2)
-    while len(game.rows) > 1:
+    previous_moves = deque(maxlen=3)
+    while len(game.rows) > 1 or any(not num.crossed for num in game.rows[-1]):
         current_moves = 0
         moved = True
         while moved:
@@ -72,7 +72,6 @@ if __name__ == "__main__":
             previous_moves.pop()
         previous_moves.appendleft(current_moves)
 
-        # print(f"{g}\n")
         print(
             f"Round {checks}; "
             + f"Numbers {added_numbers * 2} (-{current_moves * 2}/+{added_numbers}); "
